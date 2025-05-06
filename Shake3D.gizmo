@@ -1,0 +1,1001 @@
+#! C:/Program Files/Nuke15.2v1/nuke-15.2.1.dll -nx
+version 15.2 v1
+Gizmo {
+ inputs 2
+ knobChanged "n = nuke.thisNode()\nk = nuke.thisKnob()\n\nif k.name() == \"fix\":\n    if int(k.value()) == False:\n        n.knobs()\['pworld'].setVisible(False)\n    else:\n        n.knobs()\['pworld'].setVisible(True)\n        \nif k.name() == \"output_mask\":\n    if int(k.value()) == False:\n        n.knobs()\['invert'].setVisible(False)\n        n.knobs()\['math'].setVisible(False)\n        n.knobs()\['bias'].setVisible(False)\n    else:\n        n.knobs()\['invert'].setVisible(True)\n        n.knobs()\['math'].setVisible(True)\n        if n.knobs()\['math'].value() == \"Biased\":\n            n.knobs()\['bias'].setVisible(True)\n        else:\n            n.knobs()\['bias'].setVisible(False)\n            \nif k.name() == \"math\":\n    if n.knobs()\['math'].value() == \"Biased\":\n        n.knobs()\['bias'].setVisible(True)\n    else:\n        n.knobs()\['bias'].setVisible(False)"
+ tile_color 0x8c668cff
+ gl_color 0xffffffff
+ addUserKnob {20 shake3dcontrols l Controls}
+ addUserKnob {26 ""}
+ addUserKnob {26 design l "" +STARTLINE T "\n<font color=\"#9b9b9b\"><B> design your effect from top to bottom | normalized depth far=0 expected </b></font>"}
+ addUserKnob {26 ""}
+ addUserKnob {41 filter l "select a global filter" t "only 1 filter hit will be applied in the node, select the one you want to use" T STMap1.filter}
+ addUserKnob {41 overscan t "this overscan control interacts with the input image, whether it has overscan or not. Consider an overscan value equal to or greater than that of the input image" -STARTLINE T GenerateSTMap.overscan}
+ addUserKnob {26 ""}
+ addUserKnob {26 text_1 l "" +STARTLINE T "|depth setup and processing|"}
+ addUserKnob {26 ""}
+ addUserKnob {41 depth l "select your depth" T Shuffle_Z.in}
+ addUserKnob {41 disable_4 l "preview depth adjustment" t "preview the black point and white point adjustment of the depth" T Switch1.disable}
+ addUserKnob {41 blackpoint T Grade1.blackpoint}
+ addUserKnob {41 whitepoint T Grade1.whitepoint}
+ addUserKnob {41 size l "blur size" t "minimize unwanted warping by bluring the entire frame" T Blur1.size}
+ addUserKnob {41 size_1 l "extra blur mask" t "when mask is connected, this will add more blurring on top of the \"blur size\". Helpful for localized control in unwanted warping areas." T Blur2.size}
+ addUserKnob {41 black_clamp l "black clamp" +INVISIBLE T Grade1.black_clamp}
+ addUserKnob {41 white_clamp l "white clamp" -STARTLINE +INVISIBLE T Grade1.white_clamp}
+ addUserKnob {26 divider1 l "" +STARTLINE}
+ addUserKnob {26 shake3d l "" t "this is the first layer of transformation and it uses depth channel in combination with internal warping tools. This tries to simulate micro movements of the camera in space" +STARTLINE T "|3D Shake - Microparallax|"}
+ addUserKnob {41 disable_1 l Disable -STARTLINE T warp.disable}
+ addUserKnob {26 divider2 l "" +STARTLINE}
+ addUserKnob {41 channels T warp.channels}
+ addUserKnob {41 center t "choose the center from where the dimensionalization happens, so where the center is the image will remain still for the most part" T warp.center}
+ addUserKnob {41 setCenter l "Set Center" -STARTLINE T warp.setCenter}
+ addUserKnob {41 disable_5 l "disable preview" t "preview where to set the center of warpings" -STARTLINE T Merge1.disable}
+ addUserKnob {26 ""}
+ addUserKnob {41 curvetype l type T CurveGenerator1.curvetype}
+ addUserKnob {41 waveLength l wave -STARTLINE T CurveGenerator1.waveLength}
+ addUserKnob {41 minVal l Xmin T CurveGenerator1.minVal}
+ addUserKnob {41 maxVal l Xmax -STARTLINE T CurveGenerator1.maxVal}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {41 curvetype_1 l type T CurveGenerator2.curvetype}
+ addUserKnob {41 waveLength_1 l wave -STARTLINE T CurveGenerator2.waveLength}
+ addUserKnob {41 minVal_1 l Ymin T CurveGenerator2.minVal}
+ addUserKnob {41 maxVal_1 l Ymax -STARTLINE T CurveGenerator2.maxVal}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {41 curvetype_2 l type T CurveGenerator3.curvetype}
+ addUserKnob {41 waveLength_2 l wave -STARTLINE T CurveGenerator3.waveLength}
+ addUserKnob {41 minVal_2 l rot-min T CurveGenerator3.minVal}
+ addUserKnob {41 maxVal_2 l rot-max -STARTLINE T CurveGenerator3.maxVal}
+ addUserKnob {26 "" +STARTLINE}
+ addUserKnob {41 curvetype_3 l type T CurveGenerator4.curvetype}
+ addUserKnob {41 waveLength_3 l wave -STARTLINE T CurveGenerator4.waveLength}
+ addUserKnob {41 minVal_3 l sc-min T CurveGenerator4.minVal}
+ addUserKnob {41 maxVal_3 l sc-max -STARTLINE T CurveGenerator4.maxVal}
+ addUserKnob {26 ""}
+ addUserKnob {26 shake2d l "" t "this is the second layer of transformation, it is 2D classic only and it doesn´t use depth. Use it in combination with \"3D Shake - Microparallax\"" +STARTLINE T "|2D Shake - Classic|"}
+ addUserKnob {41 disable_2 l Disable -STARTLINE T CameraShake3_2.disable}
+ addUserKnob {26 ""}
+ addUserKnob {41 amplitude T CameraShake3_2.amplitude}
+ addUserKnob {41 rotation T CameraShake3_2.rotation}
+ addUserKnob {41 scaling T CameraShake3_2.scaling}
+ addUserKnob {41 frequency T CameraShake3_2.frequency}
+ addUserKnob {41 octaves T CameraShake3_2.octaves}
+ addUserKnob {41 seed_1 l seed -STARTLINE T CameraShake3_2.seed}
+ addUserKnob {41 cs_center l center +INVISIBLE T CameraShake3_2.cs_center}
+ addUserKnob {26 ""}
+ addUserKnob {26 reframe l "" t "you can compensate/reframe after 3d and 2d shakes" +STARTLINE T "|final re-frame|"}
+ addUserKnob {41 translate_1 l "" -STARTLINE T Position1.translate}
+ addUserKnob {26 text_2 l "" -STARTLINE T "(entire pixels)"}
+ addUserKnob {26 ""}
+ addUserKnob {26 gmb l "" t "apply the final mb" +STARTLINE T "|global motion blur|"}
+ addUserKnob {41 disable_3 l "Disable MB" -STARTLINE T VectorBlur1.disable}
+ addUserKnob {26 ""}
+ addUserKnob {41 blur_uv l "blur uv" T VectorBlur1.blur_uv}
+ addUserKnob {41 useGPUIfAvailable l "Use GPU if available" -STARTLINE T VectorBlur1.useGPUIfAvailable}
+ addUserKnob {41 uv_offset l "uv offset" T VectorBlur1.uv_offset}
+ addUserKnob {41 blur_type l "blur type" T VectorBlur1.blur_type}
+ addUserKnob {41 mv_presets l "mv presets" -STARTLINE T VectorBlur1.mv_presets}
+ addUserKnob {41 scale l "motion amount" T VectorBlur1.scale}
+ addUserKnob {41 motion_falloff l "motion falloff" T VectorBlur1.motion_falloff}
+ addUserKnob {41 offset l "shutter offset" T VectorBlur1.offset}
+ addUserKnob {41 grow_bbox l "expand blur bbox" T VectorBlur1.grow_bbox}
+ addUserKnob {6 softlines l "soft lines" +STARTLINE}
+ addUserKnob {6 blurinside l "blur inside" -STARTLINE}
+ blurinside true
+ addUserKnob {6 normalize -STARTLINE}
+ normalize true
+ addUserKnob {26 ""}
+ addUserKnob {20 info}
+ addUserKnob {26 ""}
+ addUserKnob {26 Shake3Dversion l "" +STARTLINE T "<font color=\"#9b9b9b\"><B> Shake3D v1.0 </b></font>"}
+ addUserKnob {26 ""}
+ addUserKnob {26 Creator l "" +STARTLINE T "Created by Nicolas Landajo | <a href=\"https://github.com/NicLandajo\"><span style=\"color:#C8C8C8;\">GitHub</a>"}
+}
+ BackdropNode {
+  inputs 0
+  name BackdropNode1
+  tile_color 0x713805ff
+  label "generate vector"
+  note_font_size 42
+  xpos 437
+  ypos 1218
+  bdwidth 514
+  bdheight 924
+ }
+ Input {
+  inputs 0
+  name Input
+  xpos 290
+  ypos 207
+ }
+set N4c66a400 [stack 0]
+ Dot {
+  name Dot2
+  xpos 541
+  ypos 255
+ }
+ Shuffle {
+  in depth
+  name Shuffle_Z
+  xpos 510
+  ypos 307
+ }
+ Grade {
+  channels alpha
+  black_clamp false
+  name Grade1
+  xpos 510
+  ypos 345
+ }
+ Dot {
+  name Dot5
+  xpos 541
+  ypos 399
+ }
+set Nbba2f800 [stack 0]
+ Dot {
+  name Dot13
+  xpos 541
+  ypos 471
+ }
+set N8e731c00 [stack 0]
+ Dot {
+  name Dot14
+  xpos 651
+  ypos 471
+ }
+ Dot {
+  name Dot15
+  xpos 651
+  ypos 567
+ }
+push $N8e731c00
+ Blur {
+  channels alpha
+  name Blur1
+  xpos 510
+  ypos 513
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox1
+  xpos 510
+  ypos 567
+ }
+ Dot {
+  name Dot16
+  xpos 541
+  ypos 615
+ }
+set Nbba2fc00 [stack 0]
+ Dot {
+  name Dot17
+  xpos 761
+  ypos 615
+ }
+ Dot {
+  name Dot18
+  xpos 761
+  ypos 735
+ }
+ Input {
+  inputs 0
+  name extra_blur_mask
+  xpos 620
+  ypos 663
+  number 1
+ }
+ Dot {
+  name Dot7
+  xpos 651
+  ypos 687
+ }
+push $Nbba2fc00
+ Blur {
+  inputs 1+1
+  channels alpha
+  name Blur2
+  xpos 510
+  ypos 681
+ }
+ CopyBBox {
+  inputs 2
+  name CopyBBox2
+  xpos 510
+  ypos 735
+ }
+ Dot {
+  name Dot9
+  xpos 541
+  ypos 783
+ }
+ Group {
+  inputs 0
+  name GenerateSTMap
+  xpos 290
+  ypos 490
+  addUserKnob {20 STMap l "ST Map"}
+  addUserKnob {41 format l Format T Reformat1.format}
+  addUserKnob {26 ""}
+  addUserKnob {7 overscan R 0 100}
+  addUserKnob {26 ""}
+ }
+  Reformat {
+   inputs 0
+   type "to box"
+   box_width {{Input.format.width}}
+   box_height {{Input.format.height}}
+   box_fixed true
+   name Reformat1
+   xpos 555
+   ypos 399
+  }
+  Crop {
+   box {{-width*(parent.overscan/100)/2} {-height*(parent.overscan/100)/2} {width+(width*(parent.overscan/100)/2)} {height+(height*(parent.overscan/100)/2)}}
+   name Crop1
+   xpos 555
+   ypos 446
+  }
+  Expression {
+   expr0 (x+0.5)/width
+   expr1 (y+.5)/height
+   name Expression1
+   xpos 555
+   ypos 497
+  }
+  Output {
+   name Output1
+   xpos 555
+   ypos 583
+  }
+ end_group
+ Group {
+  inputs 2
+  name warp
+  tile_color 0xa57aaaff
+  gl_color 0xffffffff
+  xpos 290
+  ypos 778
+  disable true
+  addUserKnob {20 "" l Transform}
+  addUserKnob {14 AdjBBox1_numpixels l "Add Pixels" +INVISIBLE R 0 100}
+  AdjBBox1_numpixels 1024
+  addUserKnob {41 channels T IDistort2.channels}
+  addUserKnob {6 blackOutside_1 l "Black Outside Before?" +STARTLINE}
+  addUserKnob {41 matrix T Transform1.matrix}
+  addUserKnob {41 translate T Transform1.translate}
+  addUserKnob {41 rotate T Transform1.rotate}
+  addUserKnob {41 scale T Transform1.scale}
+  addUserKnob {41 skewX l "skew X" T Transform1.skewX}
+  addUserKnob {41 skewY l "skew Y" T Transform1.skewY}
+  addUserKnob {41 center T Transform1.center}
+  addUserKnob {22 setCenter l "Set Center" -STARTLINE T "n = nuke.thisGroup()\nw = n.width()\nh = n.height()\nprint(w, h)\nn\['center'].setValue(\[w / 2.0, h / 2.0])\n"}
+  addUserKnob {41 filter_1 l filter T IDistort2.filter}
+  addUserKnob {41 clamp T Transform1.clamp}
+  addUserKnob {26 ""}
+  addUserKnob {6 cropToFormat l "Crop To Format" +STARTLINE}
+  addUserKnob {6 blackOutside2 l "Black Outside After" -STARTLINE}
+  addUserKnob {14 addPixels l "Add Pixels" R 0 100}
+  addUserKnob {41 mix T Transform3.mix}
+ }
+  Transform {
+   inputs 0
+   translate {{parent.parent.CurveGenerator1.outputValue} {parent.parent.CurveGenerator2.outputValue}}
+   rotate {{parent.parent.CurveGenerator3.outputValue}}
+   scale {{parent.parent.CurveGenerator4.outputValue}}
+   center {1024 540}
+   black_outside false
+   name Transform1
+   label "expresison link this\nto avoid st map overlay"
+   xpos -260
+   ypos -693
+  }
+  Input {
+   inputs 0
+   name ctrlMask
+   xpos 180
+   ypos -1017
+   number 1
+  }
+  Dot {
+   name Dot20
+   xpos 211
+   ypos -897
+  }
+  Dot {
+   name Dot7
+   xpos 211
+   ypos -441
+  }
+set Nf0c66400 [stack 0]
+  Dot {
+   name Dot9
+   xpos 211
+   ypos -105
+  }
+  Shuffle {
+   red alpha
+   green alpha
+   blue alpha
+   alpha black
+   name Shuffle1
+   xpos -40
+   ypos -81
+  }
+  Dot {
+   name Dot14
+   xpos -9
+   ypos -33
+  }
+set N3b5a7c00 [stack 0]
+  Input {
+   inputs 0
+   name img
+   xpos -700
+   ypos -1017
+  }
+  Dot {
+   name Dot19
+   xpos -669
+   ypos -897
+  }
+  BlackOutside {
+   name BlackOutside1
+   xpos -700
+   ypos -681
+   disable {{!parent.blackOutside_1}}
+  }
+  Dot {
+   name Dot5
+   note_font_size 41
+   xpos -669
+   ypos -513
+  }
+set N3b5a7400 [stack 0]
+  Dot {
+   name Dot8
+   xpos -229
+   ypos -441
+  }
+  Remove {
+   name Remove1
+   xpos -260
+   ypos -375
+  }
+  Dot {
+   name Dot17
+   xpos -229
+   ypos -321
+  }
+set N3b5a6c00 [stack 0]
+push $Nf0c66400
+  Dot {
+   name Dot10
+   xpos -119
+   ypos -369
+  }
+  Merge2 {
+   inputs 2
+   Achannels {-rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   Bchannels {-rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   output {-rgba.red -rgba.green -rgba.blue -rgba.alpha}
+   name Merge3
+   xpos -150
+   ypos -297
+  }
+  AdjBBox {
+   numpixels {{parent.AdjBBox1_numpixels}}
+   name AdjBBox1
+   xpos -150
+   ypos -273
+  }
+push $N3b5a6c00
+  CopyBBox {
+   inputs 2
+   name CopyBBox2
+   xpos -260
+   ypos -249
+  }
+  Expression {
+   expr0 x
+   expr1 y
+   name Expression1
+   xpos -260
+   ypos -201
+  }
+  Dot {
+   name Dot2
+   xpos -229
+   ypos -153
+  }
+set N3b5a6400 [stack 0]
+  TransformMasked {
+   channels rgba
+   translate {{parent.Transform1.translate} {parent.Transform1.translate}}
+   rotate {{parent.Transform1.rotate}}
+   scale {{parent.Transform1.scale} {parent.Transform1.scale}}
+   skewX {{parent.Transform1.skewX}}
+   skewY {{parent.Transform1.skewY}}
+   skew_order {{Transform1.skew_order}}
+   center {{parent.Transform1.center} {parent.Transform1.center}}
+   filter {{Transform1.filter}}
+   motionblur {{parent.Transform1.motionblur}}
+   shutter {{parent.Transform1.shutter}}
+   shutteroffset {{Transform1.shutteroffset}}
+   shuttercustomoffset {{parent.Transform1.shuttercustomoffset}}
+   name Transform3
+   xpos -150
+   ypos -121
+  }
+push $N3b5a6400
+  Merge2 {
+   inputs 2
+   operation minus
+   bbox B
+   name Merge1
+   xpos -260
+   ypos -81
+  }
+  Merge2 {
+   inputs 2
+   operation multiply
+   bbox B
+   name Merge2
+   xpos -260
+   ypos -33
+  }
+  Dot {
+   name Dot1
+   xpos -229
+   ypos 39
+  }
+set N3b5a6000 [stack 0]
+push $N3b5a7400
+  Dot {
+   name Dot11
+   xpos -999
+   ypos -321
+  }
+  Dot {
+   name Dot4
+   xpos -999
+   ypos 15
+  }
+set N1cd2d800 [stack 0]
+  Copy {
+   inputs 2
+   from0 rgba.red
+   to0 rgba.red
+   from1 rgba.green
+   to1 rgba.green
+   name Copy2
+   xpos -810
+   ypos 195
+  }
+  Dot {
+   name Dot12
+   xpos -779
+   ypos 831
+  }
+  Dot {
+   name Dot13
+   xpos -339
+   ypos 879
+  }
+  IDistort {
+   channels none
+   name IDistort1
+   xpos -370
+   ypos 921
+  }
+push $N3b5a7400
+  Dot {
+   name Dot16
+   xpos -669
+   ypos -153
+  }
+push $N3b5a7400
+  TransformMasked {
+   channels rgba
+   translate {{parent.Transform1.translate} {parent.Transform1.translate}}
+   rotate {{parent.Transform1.rotate}}
+   scale {{parent.Transform1.scale} {parent.Transform1.scale}}
+   skewX {{parent.Transform1.skewX}}
+   skewY {{parent.Transform1.skewY}}
+   skew_order {{Transform1.skew_order}}
+   center {{parent.Transform1.center} {parent.Transform1.center}}
+   filter {{Transform1.filter}}
+   motionblur {{parent.Transform1.motionblur}}
+   shutter {{parent.Transform1.shutter}}
+   shutteroffset {{Transform1.shutteroffset}}
+   shuttercustomoffset {{parent.Transform1.shuttercustomoffset}}
+   name Transform2
+   xpos -480
+   ypos -177
+  }
+  Merge2 {
+   inputs 2
+   name Merge4
+   label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+   xpos -480
+   ypos -105
+  }
+  Crop {
+   box {0 0 {input.width} {input.height}}
+   name Crop1
+   xpos -480
+   ypos 519
+   disable {{!parent.cropToFormat}}
+   addUserKnob {20 User}
+   addUserKnob {22 cropToBbox l "Crop to Bounding Box" -STARTLINE T codeBBox()}
+  }
+  AdjBBox {
+   numpixels {{parent.addPixels} {parent.addPixels}}
+   name AdjBBox3
+   xpos -480
+   ypos 545
+  }
+  Dot {
+   name Dot6
+   note_font_size 41
+   xpos -449
+   ypos 617
+  }
+push $N3b5a7c00
+  Dot {
+   name Dot3
+   xpos -9
+   ypos 375
+  }
+push $N3b5a6000
+push $N1cd2d800
+  Copy {
+   inputs 2
+   from0 rgba.red
+   to0 forward.u
+   from1 rgba.green
+   to1 forward.v
+   bbox A
+   name Copy1
+   xpos -260
+   ypos 171
+  }
+  Dot {
+   name Dot15
+   xpos -229
+   ypos 351
+  }
+set N1cd2c000 [stack 0]
+  Merge2 {
+   inputs 2
+   Achannels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+   Bchannels {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+   output {-rgba.red -rgba.green -rgba.blue rgba.alpha}
+   name Merge5
+   label "\[ expr \{ \[value mix] == 1 ? \" \" : \[concat Mix: \[value mix]] \}]"
+   xpos -150
+   ypos 393
+  }
+  Dot {
+   name Dot18
+   xpos -119
+   ypos 447
+  }
+push $N1cd2c000
+  CopyBBox {
+   inputs 2
+   name CopyBBox1
+   xpos -260
+   ypos 495
+  }
+  AdjBBox {
+   numpixels {{parent.addPixels} {parent.addPixels}}
+   name AdjBBox2
+   xpos -260
+   ypos 567
+  }
+  IDistort {
+   channels rgb
+   uv forward
+   name IDistort2
+   xpos -260
+   ypos 609
+  }
+  CopyBBox {
+   inputs 2
+   name CopyBBox3
+   xpos -260
+   ypos 663
+  }
+  Remove {
+   channels none
+   name Remove2
+   xpos -260
+   ypos 753
+  }
+  Copy {
+   inputs 2
+   from0 -rgba.alpha
+   to0 -rgba.alpha
+   bbox B
+   name Copy3
+   xpos -260
+   ypos 993
+  }
+  BlackOutside {
+   name BlackOutside2
+   xpos -260
+   ypos 1119
+   disable {{!parent.blackOutside2}}
+  }
+  Output {
+   name Output1
+   xpos -260
+   ypos 1239
+  }
+ end_group
+ CameraShake3 {
+  name CameraShake3_2
+  label "\[value amplitude] px at \[value frequency]"
+  xpos 290
+  ypos 969
+  disable true
+  amplitude {0 0}
+  seed 1
+  cs_center {{Input.width/2} {Input.height/2}}
+  motionblur 0
+ }
+ Position {
+  name Position1
+  xpos 290
+  ypos 1119
+ }
+ Dot {
+  name Dot11
+  xpos 321
+  ypos 1311
+ }
+set N61393000 [stack 0]
+ Dot {
+  name Dot10
+  label "  "
+  note_font "Arial Black"
+  note_font_size 16
+  xpos 656
+  ypos 1338
+ }
+set N61392c00 [stack 0]
+ TimeOffset {
+  time_offset -1
+  time ""
+  name TimeOffset2
+  label "Offset \[value time_offset] frame"
+  xpos 541
+  ypos 1426
+ }
+push $N61392c00
+ TimeOffset {
+  time_offset 1
+  time ""
+  name TimeOffset3
+  label "Offset \[value time_offset] frame"
+  xpos 695
+  ypos 1425
+ }
+ Merge2 {
+  inputs 2
+  operation from
+  Achannels rgb
+  name Merge2
+  xpos 620
+  ypos 1504
+ }
+ Expression {
+  expr0 r*input.width/2
+  expr1 g*input.height/2
+  name Expression2
+  label "<b>r</b> = r*input.width/2\n<b>g</b> = g*input.height/2"
+  note_font Verdana
+  xpos 620
+  ypos 1559
+ }
+ Dot {
+  name Dot12
+  xpos 651
+  ypos 2055
+ }
+push $N61393000
+ CheckerBoard2 {
+  inputs 0
+  format "512 512 0 0 512 512 1 square_512"
+  color0 0
+  color1 0
+  color2 0
+  color3 0
+  centerlinewidth 12
+  name CheckerBoard1
+  xpos -370
+  ypos 663
+ }
+ Transform {
+  translate {-256 -256}
+  center {256 256}
+  name Transform2
+  xpos -370
+  ypos 735
+ }
+ Reformat {
+  type "to box"
+  box_width {{Input.width}}
+  box_height {{Input.height}}
+  resize none
+  center false
+  pbb true
+  name Reformat1
+  xpos -370
+  ypos 759
+ }
+ Transform {
+  translate {{parent.warp.Transform1.center} {parent.warp.Transform1.center}}
+  center {1024 540}
+  name Transform1
+  xpos -370
+  ypos 783
+ }
+ Dot {
+  name Dot8
+  xpos -339
+  ypos 855
+ }
+push $N4c66a400
+ Dot {
+  name Dot3
+  xpos -229
+  ypos 279
+ }
+ Merge2 {
+  inputs 2
+  output rgb
+  name Merge1
+  xpos -260
+  ypos 879
+ }
+ Dot {
+  name Dot4
+  xpos -229
+  ypos 1839
+ }
+ STMap {
+  inputs 2
+  uv rgb
+  name STMap1
+  gl_color 0xffffffff
+  xpos 290
+  ypos 1857
+ }
+ Copy {
+  inputs 2
+  from0 rgba.red
+  to0 forward.u
+  from1 rgba.green
+  to1 forward.v
+  name Copy1
+  label "\n<b>Copy motion vectors in.</b>"
+  note_font Verdana
+  xpos 290
+  ypos 2050
+ }
+ Reformat {
+  type scale
+  scale 2
+  resize none
+  name Reformat2
+  xpos 290
+  ypos 2319
+ }
+ VectorBlur2 {
+  uv forward
+  soft_lines {{parent.softlines}}
+  blur_inside {{parent.blurinside}}
+  normalize {{parent.normalize}}
+  name VectorBlur1
+  xpos 290
+  ypos 2361
+  disable true
+ }
+ Reformat {
+  type scale
+  scale 0.5
+  resize none
+  pbb true
+  name Reformat3
+  xpos 290
+  ypos 2415
+ }
+push $Nbba2f800
+ Dot {
+  name Dot6
+  xpos 1201
+  ypos 399
+ }
+ Shuffle {
+  in alpha
+  name Shuffle1
+  xpos 1170
+  ypos 635
+ }
+ Dot {
+  name Dot1
+  xpos 1201
+  ypos 2459
+ }
+ Switch {
+  inputs 2
+  which 1
+  name Switch1
+  xpos 290
+  ypos 2535
+ }
+ Output {
+  name Output1
+  xpos 290
+  ypos 2607
+ }
+ NoOp {
+  inputs 0
+  name CurveGenerator1
+  knobChanged "\nn = nuke.thisNode()\n\nif n.knob('curvetype').value() == 'randomCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelif n.knob('curvetype').value() == 'noiseCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelse:\n    n.knob('seed').setEnabled(False)\n    n.knob('floorswitch').setEnabled(False)\n\n\n\n"
+  xpos 70
+  ypos 663
+  addUserKnob {20 Values}
+  addUserKnob {52 knobChangedInstructions l knC T "nuke.thisNode().knob('knobChanged').setValue('''\nn = nuke.thisNode()\n\nif n.knob('curvetype').value() == 'randomCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelif n.knob('curvetype').value() == 'noiseCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelse:\n    n.knob('seed').setEnabled(False)\n    n.knob('floorswitch').setEnabled(False)\n\n\n\n''')" +STARTLINE}
+  addUserKnob {6 floorswitch l "floor curves" +STARTLINE}
+  addUserKnob {4 curvetype M {sine square triangle sawtooth bounce randomCurve noiseCurve "" "" "" "" "" "" ""}}
+  curvetype randomCurve
+  addUserKnob {7 waveLength R 0 50}
+  waveLength 0.5
+  addUserKnob {7 offsetX R -25 25}
+  addUserKnob {7 offsetY R -25 25}
+  addUserKnob {7 maxVal R 25 -25}
+  addUserKnob {7 minVal R 25 -25}
+  addUserKnob {7 seed R 0 50}
+  addUserKnob {20 Output}
+  addUserKnob {7 outputValue}
+  outputValue {{"\[value curvetype]"}}
+  addUserKnob {12 circle l "outputValue circle"}
+  circle {{"(((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"} {"(((cos(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {20 curves}
+  addUserKnob {7 sine}
+  sine {{"(((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 square}
+  square {{"(((((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * (maxVal-minVal) ) + minVal) > ((maxVal/2)+(minVal/2)) ? maxVal : minVal)+offsetY"}}
+  addUserKnob {7 triangle}
+  triangle {{"(((((2*asin(sin(2*pi*(frame/waveLength)+offsetX)))/pi) / 2)+0.5) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 sawtooth}
+  sawtooth {{"((1/waveLength)*(((frame-1)+offsetX) % waveLength) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 randomCurve}
+  randomCurve {{"floorswitch==1?((random(seed,floor(frame/waveLength)+offsetX)) * ((maxVal-minVal) ) + minVal)+offsetY:((random(seed,(frame/waveLength)+offsetX)) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 noiseCurve}
+  noiseCurve {{"floorswitch==1?(((1*(noise(seed,floor(frame/waveLength)+offsetX))+1 ) /2 ) * ((maxVal-minVal) ) + minVal)+offsetY:(((1*(noise(seed,(frame/waveLength)+offsetX))+1 ) /2 ) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 bounce}
+  bounce {{"((sin(((frame/waveLength)*pi)+offsetX)>0?sin(((frame/waveLength)*pi)+offsetX):cos((((frame/waveLength)*pi)+offsetX)+(pi/2))) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+ }
+ NoOp {
+  inputs 0
+  name CurveGenerator2
+  knobChanged "\nn = nuke.thisNode()\n\nif n.knob('curvetype').value() == 'randomCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelif n.knob('curvetype').value() == 'noiseCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelse:\n    n.knob('seed').setEnabled(False)\n    n.knob('floorswitch').setEnabled(False)\n\n\n\n"
+  xpos 70
+  ypos 735
+  addUserKnob {20 Values}
+  addUserKnob {52 knobChangedInstructions l knC T "nuke.thisNode().knob('knobChanged').setValue('''\nn = nuke.thisNode()\n\nif n.knob('curvetype').value() == 'randomCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelif n.knob('curvetype').value() == 'noiseCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelse:\n    n.knob('seed').setEnabled(False)\n    n.knob('floorswitch').setEnabled(False)\n\n\n\n''')" +STARTLINE}
+  addUserKnob {6 floorswitch l "floor curves" +STARTLINE}
+  addUserKnob {4 curvetype M {sine square triangle sawtooth bounce randomCurve noiseCurve "" "" "" "" "" "" ""}}
+  curvetype randomCurve
+  addUserKnob {7 waveLength R 0 50}
+  waveLength 0.5
+  addUserKnob {7 offsetX R -25 25}
+  addUserKnob {7 offsetY R -25 25}
+  addUserKnob {7 maxVal R 25 -25}
+  addUserKnob {7 minVal R 25 -25}
+  addUserKnob {7 seed R 0 50}
+  addUserKnob {20 Output}
+  addUserKnob {7 outputValue}
+  outputValue {{"\[value curvetype]"}}
+  addUserKnob {12 circle l "outputValue circle"}
+  circle {{"(((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"} {"(((cos(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {20 curves}
+  addUserKnob {7 sine}
+  sine {{"(((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 square}
+  square {{"(((((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * (maxVal-minVal) ) + minVal) > ((maxVal/2)+(minVal/2)) ? maxVal : minVal)+offsetY"}}
+  addUserKnob {7 triangle}
+  triangle {{"(((((2*asin(sin(2*pi*(frame/waveLength)+offsetX)))/pi) / 2)+0.5) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 sawtooth}
+  sawtooth {{"((1/waveLength)*(((frame-1)+offsetX) % waveLength) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 randomCurve}
+  randomCurve {{"floorswitch==1?((random(seed,floor(frame/waveLength)+offsetX)) * ((maxVal-minVal) ) + minVal)+offsetY:((random(seed,(frame/waveLength)+offsetX)) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 noiseCurve}
+  noiseCurve {{"floorswitch==1?(((1*(noise(seed,floor(frame/waveLength)+offsetX))+1 ) /2 ) * ((maxVal-minVal) ) + minVal)+offsetY:(((1*(noise(seed,(frame/waveLength)+offsetX))+1 ) /2 ) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 bounce}
+  bounce {{"((sin(((frame/waveLength)*pi)+offsetX)>0?sin(((frame/waveLength)*pi)+offsetX):cos((((frame/waveLength)*pi)+offsetX)+(pi/2))) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+ }
+ NoOp {
+  inputs 0
+  name CurveGenerator3
+  knobChanged "\nn = nuke.thisNode()\n\nif n.knob('curvetype').value() == 'randomCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelif n.knob('curvetype').value() == 'noiseCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelse:\n    n.knob('seed').setEnabled(False)\n    n.knob('floorswitch').setEnabled(False)\n\n\n\n"
+  xpos 70
+  ypos 807
+  addUserKnob {20 Values}
+  addUserKnob {52 knobChangedInstructions l knC T "nuke.thisNode().knob('knobChanged').setValue('''\nn = nuke.thisNode()\n\nif n.knob('curvetype').value() == 'randomCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelif n.knob('curvetype').value() == 'noiseCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelse:\n    n.knob('seed').setEnabled(False)\n    n.knob('floorswitch').setEnabled(False)\n\n\n\n''')" +STARTLINE}
+  addUserKnob {6 floorswitch l "floor curves" +STARTLINE}
+  addUserKnob {4 curvetype M {sine square triangle sawtooth bounce randomCurve noiseCurve "" "" "" "" "" "" ""}}
+  curvetype randomCurve
+  addUserKnob {7 waveLength R 0 50}
+  waveLength 0.5
+  addUserKnob {7 offsetX R -25 25}
+  addUserKnob {7 offsetY R -25 25}
+  addUserKnob {7 maxVal R 25 -25}
+  addUserKnob {7 minVal R 25 -25}
+  addUserKnob {7 seed R 0 50}
+  addUserKnob {20 Output}
+  addUserKnob {7 outputValue}
+  outputValue {{"\[value curvetype]"}}
+  addUserKnob {12 circle l "outputValue circle"}
+  circle {{"(((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"} {"(((cos(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {20 curves}
+  addUserKnob {7 sine}
+  sine {{"(((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 square}
+  square {{"(((((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * (maxVal-minVal) ) + minVal) > ((maxVal/2)+(minVal/2)) ? maxVal : minVal)+offsetY"}}
+  addUserKnob {7 triangle}
+  triangle {{"(((((2*asin(sin(2*pi*(frame/waveLength)+offsetX)))/pi) / 2)+0.5) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 sawtooth}
+  sawtooth {{"((1/waveLength)*(((frame-1)+offsetX) % waveLength) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 randomCurve}
+  randomCurve {{"floorswitch==1?((random(seed,floor(frame/waveLength)+offsetX)) * ((maxVal-minVal) ) + minVal)+offsetY:((random(seed,(frame/waveLength)+offsetX)) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 noiseCurve}
+  noiseCurve {{"floorswitch==1?(((1*(noise(seed,floor(frame/waveLength)+offsetX))+1 ) /2 ) * ((maxVal-minVal) ) + minVal)+offsetY:(((1*(noise(seed,(frame/waveLength)+offsetX))+1 ) /2 ) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 bounce}
+  bounce {{"((sin(((frame/waveLength)*pi)+offsetX)>0?sin(((frame/waveLength)*pi)+offsetX):cos((((frame/waveLength)*pi)+offsetX)+(pi/2))) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+ }
+ NoOp {
+  inputs 0
+  name CurveGenerator4
+  knobChanged "\nn = nuke.thisNode()\n\nif n.knob('curvetype').value() == 'randomCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelif n.knob('curvetype').value() == 'noiseCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelse:\n    n.knob('seed').setEnabled(False)\n    n.knob('floorswitch').setEnabled(False)\n\n\n\n"
+  xpos 70
+  ypos 879
+  addUserKnob {20 Values}
+  addUserKnob {52 knobChangedInstructions l knC T "nuke.thisNode().knob('knobChanged').setValue('''\nn = nuke.thisNode()\n\nif n.knob('curvetype').value() == 'randomCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelif n.knob('curvetype').value() == 'noiseCurve':\n    n.knob('seed').setEnabled(True)\n    n.knob('floorswitch').setEnabled(True)\n\nelse:\n    n.knob('seed').setEnabled(False)\n    n.knob('floorswitch').setEnabled(False)\n\n\n\n''')" +STARTLINE}
+  addUserKnob {6 floorswitch l "floor curves" +STARTLINE}
+  addUserKnob {4 curvetype M {sine square triangle sawtooth bounce randomCurve noiseCurve "" "" "" "" "" "" ""}}
+  curvetype randomCurve
+  addUserKnob {7 waveLength R 0 50}
+  waveLength 0.5
+  addUserKnob {7 offsetX R -25 25}
+  addUserKnob {7 offsetY R -25 25}
+  addUserKnob {7 maxVal R 25 -25}
+  maxVal 1
+  addUserKnob {7 minVal R 25 -25}
+  minVal 1
+  addUserKnob {7 seed R 0 50}
+  addUserKnob {20 Output}
+  addUserKnob {7 outputValue}
+  outputValue {{"\[value curvetype]"}}
+  addUserKnob {12 circle l "outputValue circle"}
+  circle {{"(((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"} {"(((cos(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {20 curves}
+  addUserKnob {7 sine}
+  sine {{"(((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 square}
+  square {{"(((((sin(((frame*(pi*2/(waveLength/2))/2)+offsetX))+1)/2) * (maxVal-minVal) ) + minVal) > ((maxVal/2)+(minVal/2)) ? maxVal : minVal)+offsetY"}}
+  addUserKnob {7 triangle}
+  triangle {{"(((((2*asin(sin(2*pi*(frame/waveLength)+offsetX)))/pi) / 2)+0.5) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 sawtooth}
+  sawtooth {{"((1/waveLength)*(((frame-1)+offsetX) % waveLength) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 randomCurve}
+  randomCurve {{"floorswitch==1?((random(seed,floor(frame/waveLength)+offsetX)) * ((maxVal-minVal) ) + minVal)+offsetY:((random(seed,(frame/waveLength)+offsetX)) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 noiseCurve}
+  noiseCurve {{"floorswitch==1?(((1*(noise(seed,floor(frame/waveLength)+offsetX))+1 ) /2 ) * ((maxVal-minVal) ) + minVal)+offsetY:(((1*(noise(seed,(frame/waveLength)+offsetX))+1 ) /2 ) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+  addUserKnob {7 bounce}
+  bounce {{"((sin(((frame/waveLength)*pi)+offsetX)>0?sin(((frame/waveLength)*pi)+offsetX):cos((((frame/waveLength)*pi)+offsetX)+(pi/2))) * ((maxVal-minVal) ) + minVal)+offsetY"}}
+ }
+end_group
