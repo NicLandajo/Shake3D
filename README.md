@@ -5,4 +5,3 @@ https://github.com/rafaelperez/Depth-Anything-for-Nuke
 
 Tutorial for 3DShake https://www.youtube.com/watch?v=fWrU9rXJcZU
 
-![shake3d youtube thumb](https://github.com/user-attachments/assets/d8ccea3b-49d3-446d-87b7-eb6b2f0a5584)
