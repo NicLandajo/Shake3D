@@ -5,3 +5,5 @@ https://github.com/rafaelperez/Depth-Anything-for-Nuke
 
 Tutorial for 3DShake https://www.youtube.com/watch?v=fWrU9rXJcZU
 
+version 1.2 changelog - tool updates video: https://www.youtube.com/watch?v=RtFPkvK7lu4
+
