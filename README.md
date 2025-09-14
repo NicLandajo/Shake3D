@@ -2,7 +2,7 @@
 
 # SHAKE3D - Design camera and object shake for your shots!
 
-Working on Nuke 16.0v2 and 15.2v1 at the moment.
+Tested on Nuke 16.0v2 and 15.2v1 at the moment.
 #
 ☕Please support this project☕ Thank You! https://buymeacoffee.com/nicolaslandajo
 #
